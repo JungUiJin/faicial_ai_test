@@ -5,6 +5,7 @@ on:
     branches:
       - main  # 또는 deploy 브랜치
   pull_request:
+    branches:
       - main
 
 jobs:
