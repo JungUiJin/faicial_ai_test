@@ -50,12 +50,50 @@ def devide_region(image_pil: Image.Image, landmarks: list[tuple], indices: list[
 
 # 얼굴 부위별 검출
 def get_face_parts(landmarks: list[tuple], image_pil: Image.Image) -> dict[str, Image.Image]:
+    
+    corrected_image = correct_face_tilt(image_pil)
+    
     parts = {}
     for part_name, indices in FACE_PARTS.items():
         padding_ratio = PADDING_RATIO_MAP.get(part_name, {})
-        cropped = devide_region(image_pil, landmarks, indices, padding_ratio)
+        cropped = devide_region(corrected_image, landmarks, indices, padding_ratio)
         parts[part_name] = cropped
     return parts
+
+def correct_face_tilt(pil_image):
+    # PIL 이미지를 numpy 배열로 변환
+    image_np = np.array(pil_image)
+
+    # mediapipe 얼굴 탐지 초기화
+    mp_face_mesh = mp.solutions.face_mesh
+    with mp_face_mesh.FaceMesh(static_image_mode=True, max_num_faces=1, refine_landmarks=True) as face_mesh:
+        results = face_mesh.process(image_np)
+
+        if not results.multi_face_landmarks:
+            print("얼굴을 찾을 수 없습니다.")
+            return pil_image
+
+        face_landmarks = results.multi_face_landmarks[0]
+
+        # 양쪽 눈의 중심 좌표 얻기 (mediapipe의 눈 좌표 참조)
+        left_eye = face_landmarks.landmark[33]  # 왼쪽 눈 외측
+        right_eye = face_landmarks.landmark[263]  # 오른쪽 눈 외측
+
+        image_width, image_height = pil_image.size
+
+        # 실제 픽셀 위치로 변환
+        left_eye_pos = np.array([left_eye.x * image_width, left_eye.y * image_height])
+        right_eye_pos = np.array([right_eye.x * image_width, right_eye.y * image_height])
+
+        # 두 눈 사이의 각도 계산
+        dx = right_eye_pos[0] - left_eye_pos[0]
+        dy = right_eye_pos[1] - left_eye_pos[1]
+        angle = math.degrees(math.atan2(dy, dx))  # 시계 방향이 양수
+
+        # PIL은 반시계방향이 양수이므로 음수로 회전
+        rotated_image = pil_image.rotate(-angle, resample=Image.BICUBIC, expand=True)
+
+        return rotated_image
 
 # === 기본 SSIM 비교 함수 (좌우 반전 포함, 이미지 객체 사용) ===
 def compare_ssim_flipped_images(img1: Image.Image, img2: Image.Image) -> float:
