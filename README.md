@@ -1,6 +1,6 @@
 # 🧠 FAIcial_AI
 
-🎭 FAIcial 프로젝트: 얼굴 대칭 분석 AI
+🎭 FAIcial 프로젝트: 얼굴 대칭 분석 어플리케이션
 
 ---
 
