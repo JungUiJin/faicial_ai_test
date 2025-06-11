@@ -10,9 +10,7 @@ from utils.visual_utils import draw_landmark_points, draw_specific_points  # 디
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # 전체 도메인 허용 (개발 환경에서만 권장)
-#CORS(app, origins=["http://localhost:5173"])
-
+CORS(app, origins=["https://faicial.site"])  # 운영용: 정확한 출처만 허용
 # ──────────────────────────────────────────────────────────────────────────────
 # DEBUG LANDMARKS ENDPOINT
 @app.route("/debug_landmarks", methods=["POST"])
