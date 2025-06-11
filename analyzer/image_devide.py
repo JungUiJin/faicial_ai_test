@@ -2,6 +2,8 @@ import os
 from PIL import Image, ImageOps
 from skimage.metrics import structural_similarity as ssim
 import numpy as np
+import mediapipe as mp
+import math
 
 # === 얼굴 부위별 랜드마크 인덱스 ===
 FACE_PARTS = {
