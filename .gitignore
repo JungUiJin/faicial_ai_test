@@ -1,0 +1,13 @@
+*.pyc
+__pycache__/
+__pycache__/
+*.pyc
+*.pyc
+/outputs/
+/test_images/
+/logs/
+.venv/
+*.png
+*.jpg
+*.jpeg
+result_image_base64.txt
