@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from analyzer.detect_face import detect_landmarks
+from analyzer.detect_face import align_and_detect_landmarks
 from analyzer.analyze_symmetry import calculate_symmetry
 from analyzer.visualize_result import generate_result_image
 from analyzer.image_devide import compare_match_parts_from_images
@@ -72,6 +73,8 @@ def analyze():
             return jsonify({"error": "No face detected"}), 400
 
         logger.debug(f"랜드마크 수: {len(landmarks)}")
+        
+        align_landmarks, align_image = align_and_detect_landmarks(image_bytes)
 
         # 3. 대칭률 계산
         logger.debug("대칭률 계산 시작")
@@ -81,7 +84,7 @@ def analyze():
         
         # 4. 일치율 계산
         logger.debug("일치율 계산 시작")
-        parts_images = get_face_parts(landmarks, image)
+        parts_images = get_face_parts(align_landmarks, align_image)
         match_scores = compare_match_parts_from_images(parts_images)
 
         logger.debug(f"부위별 일치율 : {match_scores}")
