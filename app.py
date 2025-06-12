@@ -54,7 +54,7 @@ def debug_landmarks():
 
 @app.route("/analyze", methods=["POST"])
 def analyze():
-    logger.info("분석 요청 수신됨 v3")
+    logger.info("분석 요청 수신됨 v5")
 
     # 1. 이미지 파일 확인
     if "image" not in request.files:
@@ -78,7 +78,7 @@ def analyze():
 
         # 3. 대칭률 계산
         logger.debug("대칭률 계산 시작")
-        symmetry_score, part_scores = calculate_symmetry(landmarks)
+        symmetry_score, part_scores = calculate_symmetry(align_landmarks)
         logger.debug(f"총 대칭률 점수: {symmetry_score}")
         logger.debug(f"부위별 대칭률 점수: {part_scores}")
         
