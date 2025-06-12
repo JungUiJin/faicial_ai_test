@@ -96,7 +96,7 @@ def align_and_detect_landmarks(image_bytes: bytes):
         logger.debug(f"얼굴 회전 각도: {angle:.2f}도")
 
         # 회전 행렬 계산 및 이미지 회전
-        center = tuple(np.array([w // 2, h // 2]))
+        center = (int(w // 2), int(h // 2))
         rot_mat = cv2.getRotationMatrix2D(center, angle, 1.0)
         aligned_image = cv2.warpAffine(image_rgb, rot_mat, (w, h), flags=cv2.INTER_LINEAR)
 
