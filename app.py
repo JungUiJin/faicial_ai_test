@@ -54,7 +54,7 @@ def debug_landmarks():
 
 @app.route("/analyze", methods=["POST"])
 def analyze():
-    logger.info("분석 요청 수신됨 v1")
+    logger.info("분석 요청 수신됨 v3")
 
     # 1. 이미지 파일 확인
     if "image" not in request.files:
